@@ -26,11 +26,11 @@ import (
 
 	"github.com/HelloWorldZQ/quintinblog/controller/console"
 	"github.com/HelloWorldZQ/quintinblog/log"
+	"github.com/HelloWorldZQ/quintinblog/model"
 	"github.com/HelloWorldZQ/quintinblog/theme"
 	"github.com/HelloWorldZQ/quintinblog/util"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/HelloWorldZQ/quintinblog/model"
 )
 
 // Logger
@@ -60,7 +60,7 @@ func MapRoutes() *gin.Engine {
 	})
 
 	ret.Use(gin.Recovery())
-
+	ret.Use(logUrl)
 	store := sessions.NewCookieStore([]byte(model.Conf.SessionSecret))
 	store.Options(sessions.Options{
 		Path:     "/",
@@ -79,7 +79,7 @@ func MapRoutes() *gin.Engine {
 	api.POST("/register", registerAction)
 	api.POST("/login", loginAction)
 	api.POST("/logout", logoutAction)
-	api.Any("/hp/*apis", util.HacPaiAPI())
+	//api.Any("/hp/*apis", util.HacPaiAPI())
 	api.GET("/status", getStatusAction)
 	api.GET("/check-version", console.CheckVersion)
 	api.GET("/blogs/top", showTopBlogs)

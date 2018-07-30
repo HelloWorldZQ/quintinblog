@@ -18,7 +18,6 @@ package controller
 
 import (
 	"net/http"
-	"net/url"
 	"strings"
 	"time"
 
@@ -35,6 +34,10 @@ type DataModel map[string]interface{}
 
 const nilB3id = "H9oxzSym"
 
+func logUrl(c *gin.Context) {
+	logger.Debug(c.Request.URL)
+	c.Next()
+}
 func fillUser(c *gin.Context) {
 	inited := service.Init.Inited()
 	if !inited && util.PathInit != c.Request.URL.Path {
@@ -97,9 +100,15 @@ func fillUser(c *gin.Context) {
 		if "" == redirectURL {
 			redirectURL = model.Conf.Server + c.Request.URL.Path
 		}
-		redirectURL = url.QueryEscape(redirectURL)
-		c.Redirect(http.StatusSeeOther, util.HacPaiURL+"/apis/b3-identity?goto="+redirectURL)
-		c.Abort()
+		if redirectURL == model.Conf.Server+c.Request.URL.Path {
+			c.Next()
+		} else {
+			c.Redirect(http.StatusSeeOther, redirectURL)
+			c.Abort()
+		}
+
+		//c.Redirect(http.StatusSeeOther, util.HacPaiURL+"/apis/b3-identity?goto="+redirectURL)
+		//c.Abort()
 
 		return
 	default:
@@ -172,7 +181,7 @@ func fillUser(c *gin.Context) {
 		(*dataModel)["User"] = session
 
 		if util.PathLogin == c.Request.URL.Path || util.PathRegister == c.Request.URL.Path {
-			c.Redirect(http.StatusSeeOther, model.Conf.Server + util.PathAdmin)
+			c.Redirect(http.StatusSeeOther, model.Conf.Server+util.PathAdmin)
 			c.Abort()
 
 			return

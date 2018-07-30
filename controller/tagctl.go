@@ -35,7 +35,7 @@ func showTagsAction(c *gin.Context) {
 	dataModel := getDataModel(c)
 	blogID := getBlogID(c)
 	locale := getLocale(c)
-	tagModels := service.Tag.GetTags(math.MaxInt64, blogID)
+	tagModels := service.Tag.GetTags(math.MaxInt32, blogID)
 	var themeTags []*model.ThemeTag
 	for _, tagModel := range tagModels {
 		themeTag := &model.ThemeTag{
