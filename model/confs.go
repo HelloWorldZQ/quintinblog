@@ -43,7 +43,7 @@ const Version = "1.7.0"
 var Conf *Configuration
 
 // UserAgent represents HTTP client user agent.
-var UserAgent = "Mozilla/5.0 (compatible; Pipe" + Version + "; +" + util.HacPaiURL + ")"
+var UserAgent = "Mozilla/5.0 (compatible; Pipe" + Version + ";)"
 
 // Models represents all models..
 var Models = []interface{}{

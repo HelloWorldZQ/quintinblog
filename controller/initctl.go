@@ -23,14 +23,11 @@ import (
 	"path/filepath"
 	"strings"
 	"text/template"
-	"time"
-
-	"github.com/HelloWorldZQ/quintinblog/model"
+		"github.com/HelloWorldZQ/quintinblog/model"
 	"github.com/HelloWorldZQ/quintinblog/service"
 	"github.com/HelloWorldZQ/quintinblog/util"
 	"github.com/gin-gonic/gin"
-	"github.com/parnurzeal/gorequest"
-)
+	)
 
 func showInitPageAction(c *gin.Context) {
 	t, err := template.ParseFiles(filepath.ToSlash(filepath.Join(model.Conf.StaticRoot, "console/dist/init/index.html")))
@@ -135,19 +132,6 @@ func initAction(c *gin.Context) {
 	}
 
 	checkResult := util.NewResult()
-	request := gorequest.New()
-	_, _, errs := request.Post(util.HacPaiURL+"/apis/check-b3key").Send(map[string]interface{}{
-		"userName":  session.UName,
-		"userB3Key": b3key,
-	}).Set("user-agent", model.UserAgent).Timeout(30*time.Second).
-		Retry(3, 5*time.Second, http.StatusInternalServerError).EndStruct(checkResult)
-	if nil != errs {
-		logger.Errorf("check b3 key failed: %s", errs)
-		result.Code = -1
-		result.Msg = "check b3 key failed"
-
-		return
-	}
 
 	if 0 != checkResult.Code {
 		result.Code = -1

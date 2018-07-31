@@ -218,12 +218,7 @@ func refreshUploadToken() {
 	}
 
 	uploadTokenResult := util.NewResult()
-	if _, _, errs := gorequest.New().Get(util.HacPaiURL+"/apis/qiniu/ut").Timeout(15*time.Second).
-		Retry(3, time.Second, http.StatusInternalServerError).EndStruct(uploadTokenResult); nil != errs {
-		logger.Errorf("can't refresh upload token: %s", errs[0])
 
-		return
-	}
 
 	if 0 != uploadTokenResult.Code {
 		logger.Errorf("can't refresh upload token, get upload token result is [%+v]", uploadTokenResult)

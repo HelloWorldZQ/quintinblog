@@ -24,7 +24,6 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/HelloWorldZQ/quintinblog/cron"
 	"github.com/HelloWorldZQ/quintinblog/model"
 	"github.com/HelloWorldZQ/quintinblog/service"
 	"github.com/HelloWorldZQ/quintinblog/util"
@@ -199,7 +198,7 @@ func showArticleAction(c *gin.Context) {
 
 	dataModel["Comments"] = comments
 	dataModel["Pagination"] = pagination
-	dataModel["RecommendArticles"] = getRecommendArticles()
+	//dataModel["RecommendArticles"] = getRecommendArticles()
 	fillPreviousArticle(c, article, &dataModel)
 	fillNextArticle(c, article, &dataModel)
 	dataModel["ToC"] = template.HTML(toc(dataModel["Article"].(*model.ThemeArticle)))
@@ -277,15 +276,15 @@ func toc(article *model.ThemeArticle) string {
 	return builder.String()
 }
 
-func getRecommendArticles() []*model.ThemeArticle {
-	var ret []*model.ThemeArticle
-
-	indics := util.RandInts(0, len(cron.RecommendArticles), 7)
-	for _, index := range indics {
-		article := cron.RecommendArticles[index]
-
-		ret = append(ret, article)
-	}
-
-	return ret
-}
+//func getRecommendArticles() []*model.ThemeArticle {
+//	var ret []*model.ThemeArticle
+//
+//	indics := util.RandInts(0, len(cron.RecommendArticles), 7)
+//	for _, index := range indics {
+//		article := cron.RecommendArticles[index]
+//
+//		ret = append(ret, article)
+//	}
+//
+//	return ret
+//}

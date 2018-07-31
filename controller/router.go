@@ -291,7 +291,7 @@ func routePath(c *gin.Context) {
 			c.Params = append(c.Params, gin.Param{Key: "id", Value: commentID})
 			console.RemoveCommentAction(c)
 		} else {
-			getRepliesAction(c)
+			//getRepliesAction(c)
 		}
 
 		return

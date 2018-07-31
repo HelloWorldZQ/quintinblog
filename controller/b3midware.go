@@ -19,15 +19,12 @@ package controller
 import (
 	"net/http"
 	"strings"
-	"time"
-
-	"github.com/HelloWorldZQ/quintinblog/model"
+		"github.com/HelloWorldZQ/quintinblog/model"
 	"github.com/HelloWorldZQ/quintinblog/service"
 	"github.com/HelloWorldZQ/quintinblog/util"
 	"github.com/gin-gonic/gin"
 	"github.com/mssola/user_agent"
-	"github.com/parnurzeal/gorequest"
-)
+	)
 
 // DataModel represents data model.
 type DataModel map[string]interface{}
@@ -106,88 +103,11 @@ func fillUser(c *gin.Context) {
 			c.Redirect(http.StatusSeeOther, redirectURL)
 			c.Abort()
 		}
-
-		//c.Redirect(http.StatusSeeOther, util.HacPaiURL+"/apis/b3-identity?goto="+redirectURL)
-		//c.Abort()
-
 		return
 	default:
-		result := util.NewResult()
-		_, _, errs := gorequest.New().Get(util.HacPaiURL+"/apis/check-b3-identity?b3id="+b3id).
-			Set("user-agent", model.UserAgent).Timeout(5*time.Second).
-			Retry(3, 2*time.Second, http.StatusInternalServerError).EndStruct(result)
-		if nil != errs {
-			logger.Errorf("check b3 identity failed: %s", errs)
 			c.Next()
-
 			return
-		}
 
-		if 0 != result.Code {
-			c.Next()
-
-			return
-		}
-
-		data := result.Data.(map[string]interface{})
-		username := data["userName"].(string)
-		b3Key := data["userB3Key"].(string)
-		userAvatar := data["userAvatarURL"].(string)
-
-		session = &util.SessionData{
-			UName:   username,
-			UB3Key:  b3Key,
-			UAvatar: userAvatar,
-			URole:   model.UserRoleBlogAdmin,
-		}
-
-		user := &model.User{
-			Name:      session.UName,
-			B3Key:     b3Key,
-			AvatarURL: session.UAvatar,
-		}
-
-		if service.Init.Inited() {
-			if err := service.Init.InitBlog(user); nil != err {
-				logger.Errorf("init user [name=%s] blog failed: %s", username, err.Error())
-			}
-		}
-
-		if existUser := service.User.GetUserByName(username); nil != existUser {
-			existUser.AvatarURL = session.UAvatar
-			ownBlog := service.User.GetOwnBlog(existUser.ID)
-			if nil != ownBlog {
-				session.BID = ownBlog.ID
-				session.BURL = ownBlog.URL
-				session.URole = ownBlog.UserRole
-			}
-			session.UID = existUser.ID
-			session.UB3Key = existUser.B3Key
-
-			service.User.UpdateUser(existUser)
-		} else {
-			if err := service.User.AddUser(user); nil != err {
-				logger.Errorf("add user [name=%s] failed: %s", username, err.Error())
-			}
-
-			session.UID = user.ID
-		}
-
-		if err := session.Save(c); nil != err {
-			result.Code = -1
-			result.Msg = "saves session failed: " + err.Error()
-		}
-
-		(*dataModel)["User"] = session
-
-		if util.PathLogin == c.Request.URL.Path || util.PathRegister == c.Request.URL.Path {
-			c.Redirect(http.StatusSeeOther, model.Conf.Server+util.PathAdmin)
-			c.Abort()
-
-			return
-		}
-
-		c.Next()
 	}
 }
 
