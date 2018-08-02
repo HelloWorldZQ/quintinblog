@@ -60,7 +60,11 @@ func MapRoutes() *gin.Engine {
 	})
 
 	ret.Use(gin.Recovery())
-	ret.Use(logUrl)
+
+	if "dev" == model.Conf.RuntimeMode {
+		ret.Use(logUrl)
+	}
+
 	store := sessions.NewCookieStore([]byte(model.Conf.SessionSecret))
 	store.Options(sessions.Options{
 		Path:     "/",

@@ -61,53 +61,39 @@ func fillUser(c *gin.Context) {
 
 		return
 	}
-
-	b3id := c.Request.URL.Query().Get("b3id")
-	switch b3id {
-	case nilB3id:
-		c.Next()
-
-		return
-	case "":
-		redirectURL := model.Conf.Server + c.Request.URL.Path
-		if "/admin/" == c.Request.URL.Path { // https://github.com/HelloWorldZQ/quintinblog/issues/67
-			redirectURL = model.Conf.Server + c.Request.URL.Path
-		}
-		if strings.HasPrefix(c.Request.URL.Path, util.PathBlogs) {
-			name := c.Request.URL.Path[len(util.PathBlogs)+1:]
-			name = strings.Split(name, "?")[0]
-			name = strings.Split(name, "/")[0]
-			if "" != name {
-				user := service.User.GetUserByName(name)
-				if nil != user {
-					userBlog := service.User.GetOwnBlog(user.ID)
-					blogURLSetting := service.Setting.GetSetting(model.SettingCategoryBasic, model.SettingNameBasicBlogURL, userBlog.ID)
-					redirectURL = blogURLSetting.Value + strings.Split(c.Request.URL.Path, util.PathBlogs+"/"+name)[1]
-					if "" != c.Request.URL.RawQuery {
-						redirectURL += "?" + c.Request.URL.RawQuery
-					}
+	redirectURL := model.Conf.Server + c.Request.URL.Path
+	if "/admin/" == c.Request.URL.Path { // https://github.com/HelloWorldZQ/quintinblog/issues/67
+		redirectURL = model.Conf.Server + c.Request.URL.Path
+	}
+	if strings.HasPrefix(c.Request.URL.Path, util.PathBlogs) {
+		name := c.Request.URL.Path[len(util.PathBlogs)+1:]
+		name = strings.Split(name, "?")[0]
+		name = strings.Split(name, "/")[0]
+		if "" != name {
+			user := service.User.GetUserByName(name)
+			if nil != user {
+				userBlog := service.User.GetOwnBlog(user.ID)
+				blogURLSetting := service.Setting.GetSetting(model.SettingCategoryBasic, model.SettingNameBasicBlogURL, userBlog.ID)
+				redirectURL = blogURLSetting.Value + strings.Split(c.Request.URL.Path, util.PathBlogs+"/"+name)[1]
+				if "" != c.Request.URL.RawQuery {
+					redirectURL += "?" + c.Request.URL.RawQuery
 				}
 			}
-		} else {
-			if !strings.HasPrefix(redirectURL, model.Conf.Server) {
-				redirectURL = model.Conf.Server + c.Request.URL.Path
-			}
 		}
-		redirectURL = strings.TrimSpace(redirectURL)
-		if "" == redirectURL {
+	} else {
+		if !strings.HasPrefix(redirectURL, model.Conf.Server) {
 			redirectURL = model.Conf.Server + c.Request.URL.Path
 		}
-		if redirectURL == model.Conf.Server+c.Request.URL.Path {
-			c.Next()
-		} else {
-			c.Redirect(http.StatusSeeOther, redirectURL)
-			c.Abort()
-		}
-		return
-	default:
-			c.Next()
-			return
-
+	}
+	redirectURL = strings.TrimSpace(redirectURL)
+	if "" == redirectURL {
+		redirectURL = model.Conf.Server + c.Request.URL.Path
+	}
+	if redirectURL == model.Conf.Server+c.Request.URL.Path {
+		c.Next()
+	} else {
+		c.Redirect(http.StatusSeeOther, redirectURL)
+		c.Abort()
 	}
 }
 

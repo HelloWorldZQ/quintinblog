@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-		"io/ioutil"
+	"io"
+	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"os"
@@ -13,10 +14,13 @@ import (
 	"time"
 
 	"github.com/HelloWorldZQ/quintinblog/controller"
-		"github.com/HelloWorldZQ/quintinblog/log"
+	"github.com/HelloWorldZQ/quintinblog/i18n"
+	"github.com/HelloWorldZQ/quintinblog/log"
 	"github.com/HelloWorldZQ/quintinblog/service"
-		"github.com/HelloWorldZQ/quintinblog/util"
-		"github.com/HelloWorldZQ/quintinblog/model"
+	"github.com/HelloWorldZQ/quintinblog/theme"
+	"github.com/HelloWorldZQ/quintinblog/util"
+	"github.com/gin-gonic/gin"
+	"github.com/HelloWorldZQ/quintinblog/model"
 )
 
 // Logger
@@ -30,17 +34,17 @@ func init() {
 	logger = log.NewLogger(os.Stdout)
 
 	model.LoadConf()
-	//util.LoadMarkdown()
-	//i18n.Load()
-	//theme.Load()
-	//replaceServerConf()
-	//
-	//if "dev" == model.Conf.RuntimeMode {
-	//	gin.SetMode(gin.DebugMode)
-	//} else {
-	//	gin.SetMode(gin.ReleaseMode)
-	//}
-	//gin.DefaultWriter = io.MultiWriter(os.Stdout)
+	util.LoadMarkdown()
+	i18n.Load()
+	theme.Load()
+	replaceServerConf()
+
+	if "dev" == model.Conf.RuntimeMode {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
+	gin.DefaultWriter = io.MultiWriter(os.Stdout)
 }
 
 // Entry point.
@@ -54,9 +58,9 @@ func main() {
 		Handler: router,
 	}
 
-	//handleSignal(server)
-	//
-	//logger.Infof("Pipe (v%s) is running [%s]", model.Version, model.Conf.Server)
+	handleSignal(server)
+
+	logger.Infof("Pipe (v%s) is running [%s]", model.Version, model.Conf.Server)
 	server.ListenAndServe()
 }
 

@@ -19,3 +19,15 @@ pipe
 # IDE
 .idea/
 
+/theme/x/9IPHP/js/article.min.js
+/theme/x/9IPHP/js/common.min.js
+/theme/x/Gina/js/article.min.js
+/theme/x/Gina/js/common.min.js
+/theme/x/Koma/js/article.min.js
+/theme/x/Koma/js/common.min.js
+/theme/x/Medium/js/article.min.js
+/theme/x/Medium/js/common.min.js
+/theme/x/Next/js/article.min.js
+/theme/x/Next/js/common.min.js
+/theme/sw.min.js
+/quintinblog
