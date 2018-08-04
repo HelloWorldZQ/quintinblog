@@ -51,13 +51,14 @@ const (
 	PathPlatInfo        = "/plat/info"
 	PathRegister        = "/register"
 	PathLogin           = "/login"
+	PathStatic          = "/static"
 )
 
 var reservedPaths = []string{
 	PathInit, PathSearch, PathOpensearch, PathBlogs, PathConsoleDist, PathAdmin, PathAPI, PathFavicon, PathTheme,
 	PathActivities, PathArchives, PathAuthors, PathCategories, PathTags, PathComments, PathAtom, PathRSS,
 	PathSitemap, PathUpload, PathFetchUpload, PathChangelogs, PathRobots, PathAPIsSymArticles,
-	PathAPIsSymComments, PathPlatInfo, PathRegister, PathLogin,
+	PathAPIsSymComments, PathPlatInfo, PathRegister, PathLogin,PathStatic,
 }
 
 // IsReservedPath checks the specified path is a reserved path or not.

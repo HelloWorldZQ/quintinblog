@@ -27,8 +27,7 @@ import (
 	"github.com/HelloWorldZQ/quintinblog/controller/console"
 	"github.com/HelloWorldZQ/quintinblog/log"
 	"github.com/HelloWorldZQ/quintinblog/model"
-	"github.com/HelloWorldZQ/quintinblog/theme"
-	"github.com/HelloWorldZQ/quintinblog/util"
+		"github.com/HelloWorldZQ/quintinblog/util"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
@@ -142,21 +141,7 @@ func MapRoutes() *gin.Engine {
 	consoleSettingsGroup.PUT("/account", console.UpdateAccountAction)
 	consoleSettingsGroup.PUT("/account/password", console.UpdatePasswordAction)
 
-	ret.StaticFile(util.PathFavicon, staticPath("console/static/favicon.ico"))
 
-	ret.Static(util.PathTheme+"/scss", staticPath("theme/scss"))
-	ret.Static(util.PathTheme+"/js", staticPath("theme/js"))
-	ret.Static(util.PathTheme+"/images", staticPath("theme/images"))
-	ret.StaticFile("/sw.min.js", staticPath("theme/sw.min.js"))
-	ret.StaticFile("/halt.html", staticPath("theme/halt.html"))
-
-	for _, theme := range theme.Themes {
-		themePath := staticPath("theme/x/" + theme)
-		ret.Static("/theme/x/"+theme+"/css", themePath+"/css")
-		ret.Static("/theme/x/"+theme+"/js", themePath+"/js")
-		ret.Static("/theme/x/"+theme+"/images", themePath+"/images")
-		ret.StaticFile("/theme/x/"+theme+"/thumbnail.jpg", themePath+"/thumbnail.jpg")
-	}
 	themeTemplates, err := filepath.Glob(staticPath("theme/x/*/*.html"))
 	if nil != err {
 		logger.Fatal("load theme templates failed: " + err.Error())
@@ -173,6 +158,8 @@ func MapRoutes() *gin.Engine {
 	templates := append(themeTemplates, commentTemplates...)
 	templates = append(templates, headTemplates...)
 	ret.LoadHTMLFiles(templates...)
+
+
 	themeGroup := ret.Group(util.PathBlogs + "/:username")
 	themeGroup.Use(fillUser, resolveBlog)
 	themeGroup.GET("", showArticlesAction)
@@ -193,6 +180,28 @@ func MapRoutes() *gin.Engine {
 	initGroup.Use(fillUser)
 	initGroup.GET("", showInitPageAction)
 
+	//static file
+
+	ret.StaticFile(util.PathFavicon, staticPath("console/static/favicon.ico"))
+
+	//ret.Static(util.PathTheme+"/scss", staticPath("theme/scss"))
+	//ret.Static(util.PathTheme+"/js", staticPath("theme/js"))
+	//ret.Static(util.PathTheme+"/images", staticPath("theme/images"))
+	//ret.StaticFile("/sw.min.js", staticPath("theme/sw.min.js"))
+	//ret.StaticFile("/halt.html", staticPath("theme/halt.html"))
+
+	ret.Static(util.PathTheme , staticPath("theme"))
+
+	//for _, theme := range theme.Themes {
+	//	themePath := staticPath("theme/x/" + theme)
+	//	ret.Static("/theme/x/"+theme+"/css", themePath+"/css")
+	//	ret.Static("/theme/x/"+theme+"/js", themePath+"/js")
+	//	ret.Static("/theme/x/"+theme+"/images", themePath+"/images")
+	//	ret.StaticFile("/theme/x/"+theme+"/thumbnail.jpg", themePath+"/thumbnail.jpg")
+	//}
+
+
+	ret.Static(util.PathStatic, staticPath("console/dist/"))
 	ret.Static(util.PathConsoleDist, staticPath("console/dist"))
 	ret.StaticFile(util.PathChangelogs, staticPath("changelogs.html"))
 	ret.StaticFile(util.PathRobots, staticPath("theme/robots.txt"))
