@@ -54,7 +54,7 @@ func uploadAction(c *gin.Context) {
 		return
 	}
 
-	refreshUploadToken()
+	//refreshUploadToken()
 
 	form, err := c.MultipartForm()
 	if nil != err {
@@ -177,7 +177,7 @@ func fetchUploadAction(c *gin.Context) {
 		typ = res.Header.Get("content-type")
 	}
 
-	refreshUploadToken()
+	//refreshUploadToken()
 
 	platformAdmin := service.User.GetPlatformAdmin()
 	blogID := getBlogID(c)
@@ -211,23 +211,23 @@ func fetchUploadAction(c *gin.Context) {
 }
 
 func refreshUploadToken() {
-	now := time.Now()
-	dur, _ := time.ParseDuration("30m")
-	if now.Sub(ut.expired) <= dur {
-		return
-	}
-
-	uploadTokenResult := util.NewResult()
-
-
-	if 0 != uploadTokenResult.Code {
-		logger.Errorf("can't refresh upload token, get upload token result is [%+v]", uploadTokenResult)
-
-		return
-	}
-
-	data := uploadTokenResult.Data.(map[string]interface{})
-	ut.token = data["token"].(string)
-	ut.domain = data["domain"].(string)
-	ut.expired = now
+	//now := time.Now()
+	//dur, _ := time.ParseDuration("30m")
+	//if now.Sub(ut.expired) <= dur {
+	//	return
+	//}
+	//
+	//uploadTokenResult := util.NewResult()
+	//
+	//
+	//if 0 != uploadTokenResult.Code {
+	//	logger.Errorf("can't refresh upload token, get upload token result is [%+v]", uploadTokenResult)
+	//
+	//	return
+	//}
+	//
+	////data := uploadTokenResult.Data.(map[string]interface{})
+	////ut.token = data["token"].(string)
+	////ut.domain = data["domain"].(string)
+	//ut.expired = now
 }
