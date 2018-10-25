@@ -16,11 +16,11 @@ import (
 	"github.com/HelloWorldZQ/quintinblog/controller"
 	"github.com/HelloWorldZQ/quintinblog/i18n"
 	"github.com/HelloWorldZQ/quintinblog/log"
+	"github.com/HelloWorldZQ/quintinblog/model"
 	"github.com/HelloWorldZQ/quintinblog/service"
 	"github.com/HelloWorldZQ/quintinblog/theme"
 	"github.com/HelloWorldZQ/quintinblog/util"
 	"github.com/gin-gonic/gin"
-	"github.com/HelloWorldZQ/quintinblog/model"
 )
 
 // Logger
@@ -51,6 +51,7 @@ func init() {
 func main() {
 	service.ConnectDB()
 	service.Upgrade.Perform()
+	//cron.Start()
 
 	router := controller.MapRoutes()
 	server := &http.Server{

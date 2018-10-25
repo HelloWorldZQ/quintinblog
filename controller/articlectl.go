@@ -179,15 +179,24 @@ func showArticleAction(c *gin.Context) {
 		if 0 != commentModel.ParentCommentID {
 			parentCommentModel := service.Comment.GetComment(commentModel.ParentCommentID)
 			if nil != parentCommentModel {
-				parentCommentAuthorModel := service.User.GetUser(parentCommentModel.AuthorID)
-				page := service.Comment.GetCommentPage(commentModel.ArticleID, commentModel.ID, commentModel.BlogID)
+				parentAuthor := &model.ThemeAuthor{}
+				if model.SyncCommentAuthorID == parentCommentModel.AuthorID {
+					parentAuthor.URL = parentCommentModel.AuthorURL
+					parentAuthor.Name = parentCommentModel.AuthorName
+					parentAuthor.AvatarURL = parentCommentModel.AuthorAvatarURL
+				} else {
+					parentCommentAuthorModel := service.User.GetUser(parentCommentModel.AuthorID)
+					commentAuthorBlog := service.User.GetOwnBlog(parentCommentModel.AuthorID)
+					parentAuthor.URL = service.Setting.GetSetting(model.SettingCategoryBasic, model.SettingNameBasicBlogURL, commentAuthorBlog.ID).Value + util.PathAuthors + "/" + parentCommentAuthorModel.Name
+					parentAuthor.Name = parentCommentAuthorModel.Name
+					parentAuthor.AvatarURL = parentCommentAuthorModel.AvatarURL
+				}
 
+				page := service.Comment.GetCommentPage(commentModel.ArticleID, commentModel.ID, commentModel.BlogID)
 				parentComment := &model.ThemeComment{
-					ID:  parentCommentModel.ID,
-					URL: getBlogURL(c) + article.Path + "?p=" + strconv.Itoa(page) + "#pipeComment" + strconv.Itoa(int(parentCommentModel.ID)),
-					Author: &model.ThemeAuthor{
-						Name: parentCommentAuthorModel.Name,
-					},
+					ID:     parentCommentModel.ID,
+					URL:    getBlogURL(c) + article.Path + "?p=" + strconv.Itoa(page) + "#pipeComment" + strconv.Itoa(int(parentCommentModel.ID)),
+					Author: parentAuthor,
 				}
 				comment.Parent = parentComment
 			}

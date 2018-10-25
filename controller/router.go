@@ -53,9 +53,8 @@ func MapRoutes() *gin.Engine {
 			}
 			return dict, nil
 		},
-		"minus": func(a, b int) int {
-			return a - b
-		},
+		"minus": func(a, b int) int { return a - b },
+		"mod":   func(a, b int) int { return a % b },
 	})
 
 	ret.Use(gin.Recovery())
@@ -73,7 +72,7 @@ func MapRoutes() *gin.Engine {
 	})
 	ret.Use(sessions.Sessions("pipe", store))
 	ret.POST(util.PathUpload, uploadAction)
-	ret.GET(util.PathPlatInfo, showPlatInfo)
+	ret.GET(util.PathPlatInfo, showPlatInfoAction)
 	ret.GET(util.PathSitemap, outputSitemapAction)
 
 	api := ret.Group(util.PathAPI)
@@ -84,8 +83,8 @@ func MapRoutes() *gin.Engine {
 	api.POST("/logout", logoutAction)
 	//api.Any("/hp/*apis", util.HacPaiAPI())
 	api.GET("/status", getStatusAction)
-	api.GET("/check-version", console.CheckVersion)
-	api.GET("/blogs/top", showTopBlogs)
+	api.GET("/check-version", console.CheckVersionAction)
+	api.GET("/blogs/top", showTopBlogsAction)
 
 	consoleGroup := api.Group("/console")
 	consoleGroup.Use(console.LoginCheck)
@@ -264,11 +263,11 @@ func routePath(c *gin.Context) {
 		showOpensearchAction(c)
 
 		return
-	case util.PathAPIsSymComments:
+	case util.PathAPIsSymComment:
 		addSymCommentAction(c)
 
 		return
-	case util.PathAPIsSymArticles:
+	case util.PathAPIsSymArticle:
 		if "POST" == c.Request.Method {
 			addSymArticleAction(c)
 		} else if "PUT" == c.Request.Method {

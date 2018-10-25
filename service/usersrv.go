@@ -39,6 +39,15 @@ const (
 	adminConsoleUserListWindowSize = 20
 )
 
+func (srv *userService) GetUserByGitHubId(githubId string) *model.User {
+	ret := &model.User{}
+	if err := db.Where("`github_id` = ?", githubId).First(ret).Error; nil != err {
+		return nil
+	}
+
+	return ret
+}
+
 func (srv *userService) GetBlogAdmin(blogID uint64) *model.User {
 	rel := &model.Correlation{}
 	if err := db.Where("`id1` = ? AND `type` = ? AND `blog_id` = ?",
@@ -262,9 +271,14 @@ func (srv *userService) GetTopBlogs(size int) (ret []*UserBlog) {
 
 	for _, user := range users {
 		userBlog := srv.GetOwnBlog(user.ID)
-		if (nil != userBlog) {
+		if nil != userBlog && 5 <= userBlog.UserArticleCount {
 			ret = append(ret, userBlog)
 		}
+	}
+
+	if 1 > len(ret) && 1 <= len(users) {
+		userBlog := srv.GetOwnBlog(users[0].ID)
+		ret = append(ret, userBlog)
 	}
 
 	return ret

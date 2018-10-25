@@ -2,29 +2,7 @@
   <div class="console" id="particles">
     <div class="card login">
       <h1>{{ $t('register', $store.state.locale) }}</h1>
-      <div class="ft-center login__content fn-flex" v-if="account===''">
-        <div class="fn-flex-1">
-          <a class="card card--dark login__image"
-             href="https://hacpai.com/register"
-             target="_blank">
-            <v-icon>hacpai-logo</v-icon>
-          </a>
-          <a class="login__link" href="https://hacpai.com/register"
-             target="_blank">
-            {{ $t('useHacpaiInit', $store.state.locale) }}
-          </a>
-        </div>
-        <div class="fn-flex-1">
-          <div class="card login__image fn-pointer"
-               @click="account='pipe'">
-            <img src="~/static/images/logo.png"/>
-          </div>
-          <div class="login__link fn-pointer" @click="account='pipe'">
-            {{ $t('usePipeInit', $store.state.locale) }}
-          </div>
-        </div>
-      </div>
-      <div v-if="account==='pipe'">
+      <div >
         <br>
         <v-form ref="accountForm" @submit.prevent="init">
           <v-text-field
@@ -49,7 +27,6 @@
           <span>{{ errorMsg }}</span>
         </div>
         <div class="fn-right">
-          <v-btn class="btn--info" @click="account = ''">{{ $t('preStep', $store.state.locale) }}</v-btn>
           <v-btn
             class="btn--success btn--space"
             @click="register">{{ $t('register', $store.state.locale) }}

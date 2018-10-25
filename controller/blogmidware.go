@@ -17,20 +17,20 @@
 package controller
 
 import (
-	"html/template"
-	"math"
-	"net/http"
-	"path/filepath"
-	"strconv"
-	"strings"
-	"time"
-
 	"github.com/HelloWorldZQ/quintinblog/i18n"
 	"github.com/HelloWorldZQ/quintinblog/model"
 	"github.com/HelloWorldZQ/quintinblog/service"
 	"github.com/HelloWorldZQ/quintinblog/util"
 	"github.com/dustin/go-humanize"
 	"github.com/gin-gonic/gin"
+	"html/template"
+	"math"
+	"net/http"
+	"net/url"
+	"path/filepath"
+	"strconv"
+	"strings"
+	"time"
 )
 
 func resolveBlog(c *gin.Context) {
@@ -59,8 +59,10 @@ func resolveBlog(c *gin.Context) {
 
 	fillCommon(c)
 	go service.Statistic.IncViewCount(userBlog.ID)
-
-	path := strings.Split(c.Request.RequestURI, username)[1]
+	urlPath := c.Request.RequestURI
+	urlPathDecode,_ := url.QueryUnescape(urlPath)
+	logger.Debug("test " + urlPathDecode)
+	path := strings.Split(urlPathDecode , username)[1]
 	path = strings.TrimSpace(path)
 	if end := strings.Index(path, "?"); 0 < end {
 		path = path[:end]
@@ -105,6 +107,7 @@ func fillCommon(c *gin.Context) {
 		if model.SettingNameBasicHeader == setting.Name || model.SettingNameBasicFooter == setting.Name || model.SettingNameBasicNoticeBoard == setting.Name {
 			mdResult := util.Markdown(v)
 			v = mdResult.ContentHTML
+			v = strings.TrimSpace(v)
 			v = strings.TrimPrefix(v, "<p>")
 			v = strings.TrimSuffix(v, "</p>")
 			v = strings.TrimSpace(v)
