@@ -101,7 +101,7 @@ func registerAction(c *gin.Context) {
 		return
 	}
 
-	avatarURL := "https://img.hacpai.com/pipe/default-avatar.png"
+	avatarURL := "/image/default-avatar.png"
 	//quintin removew  pipe verify
 	//platformAdmin := service.User.GetPlatformAdmin()
 	//avatarData := util.RandAvatarData()

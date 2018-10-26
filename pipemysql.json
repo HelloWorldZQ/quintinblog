@@ -9,7 +9,7 @@
     "SessionSecret": "BEYOND",
     "SessionMaxAge": 86400,
     "SQLite": "${home}/pipe.db",
-    "MySQL": "quintin:password@(quint11.net:3303)/pipe?charset=utf8mb4&parseTime=True&loc=Local",
+    "MySQL": "quintin:password@(quintin.f3322.net:3303)/pipe?charset=utf8mb4&parseTime=True&loc=Local",
     "StaticRoot": "",
     "Port": "5897",
     "AxiosBaseURL": "/api",

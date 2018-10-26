@@ -25,7 +25,7 @@ import (
 
 // ImageSize returns image URL of Qiniu image processing style with the specified width and height.
 func ImageSize(imageURL string, width, height int) string {
-	if strings.Contains(imageURL, "imageView") || !strings.Contains(imageURL, "img.hacpai.com") {
+	if strings.Contains(imageURL, "imageView") {
 		return imageURL
 	}
 
@@ -40,7 +40,7 @@ func RandImage() string {
 	delta := max - min
 	sec := rand.Int63n(delta) + min
 
-	return time.Unix(sec, 0).Format("https://img.hacpai.com/bing/20060102.jpg")
+	return time.Unix(sec, 0).Format( "/bing/20060102.jpg")
 }
 
 // RandImages returns random image URLs.

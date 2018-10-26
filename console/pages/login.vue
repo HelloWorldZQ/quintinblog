@@ -27,7 +27,7 @@
           <span>{{ errorMsg }}</span>
         </div>
         <div class="fn-right">
-          <v-btn class="btn--info" @click="account = ''">{{ $t('preStep', $store.state.locale) }}</v-btn>
+          
           <v-btn
             class="btn--success btn--space"
             @click="login">{{ $t('login', $store.state.locale) }}

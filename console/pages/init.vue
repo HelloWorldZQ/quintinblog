@@ -76,7 +76,7 @@
         </v-stepper-content>
 
         <v-stepper-content step="3" class="fn-clear">
-          <h1>{{ $t('welcome', $store.state.locale) }} Pipe</h1>
+          <h1>{{ $t('welcome', $store.state.locale) }}</h1>
           <div class="ft-center login__content fn-clear">
             <a href="https://github.com/b3log/pipe"
                target="_blank"
@@ -125,7 +125,7 @@
     },
     head () {
       return {
-        title: this.$t('welcome', this.$store.state.locale) + ' - Pipe'
+        title: this.$t('welcome', this.$store.state.locale)
       }
     },
     methods: {
